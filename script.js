@@ -13,14 +13,14 @@ const productCards =
     document.querySelectorAll(".product-card");
 
 
-filterButtons.forEach(function(button) {
+filterButtons.forEach(function (button) {
 
-    button.addEventListener("click", function() {
+    button.addEventListener("click", function () {
 
 
         // Remove active from all buttons
 
-        filterButtons.forEach(function(btn) {
+        filterButtons.forEach(function (btn) {
 
             btn.classList.remove("active");
 
@@ -40,7 +40,7 @@ filterButtons.forEach(function(button) {
 
         // Show / hide products
 
-        productCards.forEach(function(product) {
+        productCards.forEach(function (product) {
 
             const productCategory =
                 product.dataset.category;
@@ -81,9 +81,9 @@ const wishlistCount =
 let wishlistTotal = 0;
 
 
-wishlistButtons.forEach(function(button) {
+wishlistButtons.forEach(function (button) {
 
-    button.addEventListener("click", function() {
+    button.addEventListener("click", function () {
 
 
         const icon =
@@ -145,10 +145,10 @@ const sizeButtons =
     document.querySelectorAll(".size-btn");
 
 
-sizeButtons.forEach(function(button) {
+sizeButtons.forEach(function (button) {
 
 
-    button.addEventListener("click", function() {
+    button.addEventListener("click", function () {
 
 
         // Current product card
@@ -171,7 +171,7 @@ sizeButtons.forEach(function(button) {
 
         // Remove active from all sizes
 
-        allSizeButtons.forEach(function(btn) {
+        allSizeButtons.forEach(function (btn) {
 
             btn.classList.remove("active");
 
@@ -207,10 +207,10 @@ const cartCount =
 let cartTotal = 0;
 
 
-addCartButtons.forEach(function(button) {
+addCartButtons.forEach(function (button) {
 
 
-    button.addEventListener("click", function() {
+    button.addEventListener("click", function () {
 
 
         // Current product
@@ -278,7 +278,7 @@ addCartButtons.forEach(function(button) {
 
         // After 1 second
 
-        setTimeout(function() {
+        setTimeout(function () {
 
             button.innerHTML =
                 originalText;
@@ -327,7 +327,7 @@ let cart = [];
 // OPEN CART
 // =========================
 
-cartIcon.addEventListener("click", function(event) {
+cartIcon.addEventListener("click", function (event) {
 
     event.preventDefault();
 
@@ -362,9 +362,9 @@ continueShopping.addEventListener("click", closeCart);
 // ADD PRODUCT TO CART
 // =========================
 
-addCartButtons.forEach(function(button) {
+addCartButtons.forEach(function (button) {
 
-    button.addEventListener("click", function() {
+    button.addEventListener("click", function () {
 
         const productCard =
             button.closest(".product-card");
@@ -411,7 +411,7 @@ addCartButtons.forEach(function(button) {
 
         // Check existing product
 
-        const existingProduct = cart.find(function(item) {
+        const existingProduct = cart.find(function (item) {
 
             return (
                 item.name === productName &&
@@ -468,7 +468,7 @@ addCartButtons.forEach(function(button) {
             "#27ae60";
 
 
-        setTimeout(function() {
+        setTimeout(function () {
 
             button.innerHTML =
                 originalText;
@@ -541,7 +541,7 @@ function updateCart() {
 
     // Create cart products
 
-    cart.forEach(function(item, index) {
+    cart.forEach(function (item, index) {
 
         const cartProduct =
             document.createElement("div");
@@ -623,9 +623,9 @@ function updateCart() {
         document.querySelectorAll(".quantity-plus");
 
 
-    minusButtons.forEach(function(button) {
+    minusButtons.forEach(function (button) {
 
-        button.addEventListener("click", function() {
+        button.addEventListener("click", function () {
 
             const index =
                 Number(button.dataset.index);
@@ -647,9 +647,9 @@ function updateCart() {
     });
 
 
-    plusButtons.forEach(function(button) {
+    plusButtons.forEach(function (button) {
 
-        button.addEventListener("click", function() {
+        button.addEventListener("click", function () {
 
             const index =
                 Number(button.dataset.index);
@@ -669,9 +669,9 @@ function updateCart() {
         document.querySelectorAll(".remove-cart");
 
 
-    removeButtons.forEach(function(button) {
+    removeButtons.forEach(function (button) {
 
-        button.addEventListener("click", function() {
+        button.addEventListener("click", function () {
 
             const index =
                 Number(button.dataset.index);
@@ -692,7 +692,7 @@ function updateCart() {
     let totalPrice = 0;
 
 
-    cart.forEach(function(item) {
+    cart.forEach(function (item) {
 
         totalItems += item.quantity;
 
@@ -759,7 +759,7 @@ const checkoutTotalPrice =
 // OPEN CHECKOUT
 // =========================
 
-checkoutBtn.addEventListener("click", function() {
+checkoutBtn.addEventListener("click", function () {
 
     // Cart empty হলে checkout হবে না
     if (cart.length === 0) {
@@ -816,7 +816,7 @@ function updateCheckout() {
     let totalPrice = 0;
 
 
-    cart.forEach(function(item) {
+    cart.forEach(function (item) {
 
         const itemTotal =
             item.price * item.quantity;
@@ -970,7 +970,7 @@ successShopping.addEventListener(
 
 successOverlay.addEventListener(
     "click",
-    function(event) {
+    function (event) {
 
         if (event.target === successOverlay) {
             closeSuccessPopup();
@@ -998,7 +998,7 @@ successOverlay.addEventListener(
 
 // ======================================================================================================================================================================
 
-orderForm.addEventListener("submit", async function(event) {
+orderForm.addEventListener("submit", async function (event) {
 
     event.preventDefault();
 
@@ -1048,7 +1048,7 @@ orderForm.addEventListener("submit", async function(event) {
     let totalPrice = 0;
 
 
-    cart.forEach(function(item) {
+    cart.forEach(function (item) {
 
         totalItems += item.quantity;
 
@@ -1066,7 +1066,7 @@ orderForm.addEventListener("submit", async function(event) {
 
         customerAddress: customerAddress,
 
-        products: cart.map(function(item) {
+        products: cart.map(function (item) {
 
             return {
 
@@ -1109,6 +1109,11 @@ orderForm.addEventListener("submit", async function(event) {
 
         console.log("Order ID:", docRef.id);
 
+        const orderNumber =
+            "GC-" + new Date().toISOString().slice(0, 10).replace(/-/g, "") + "-" + docRef.id.slice(0, 3).toUpperCase();
+
+        document.querySelector("#success-order-id").textContent =
+            orderNumber;
 
         orderForm.reset();
 

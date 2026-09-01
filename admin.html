@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Gents Cottage | Admin Panel</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="admin-page">
+
+        <div class="admin-header">
+
+            <div>
+                <p>GENTS COTTAGE</p>
+                <h1>Order Management</h1>
+            </div>
+
+            <div class="admin-stats">
+                <div class="admin-stat">
+                    <span>Total Orders</span>
+                    <strong id="total-orders">0</strong>
+                </div>
+
+                <div class="admin-stat">
+                    <span>Pending</span>
+                    <strong id="pending-orders">0</strong>
+                </div>
+                <div class="admin-stat">
+                    <span>Delivered</span>
+                    <strong id="delivered-orders">0</strong>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="orders-container">
+
+            <div class="orders-header">
+                <div class="admin-search">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input type="text" id="order-search" placeholder="Search by customer name or phone...">
+
+                </div>
+                <h2>
+                    <i class="fa-solid fa-box"></i>
+                    Customer Orders
+                </h2>
+            </div>
+
+            <div id="orders-list">
+
+                <p>Loading orders...</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+    <script type="module">
+
+        import { initializeApp } from
+            "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+        import {
+            getFirestore,
+            collection,
+            getDocs,
+            doc,
+            updateDoc,
+            deleteDoc
+
+        } from
+            "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+        const firebaseConfig = {
+            apiKey: "তোমার Firebase API KEY",
+            authDomain: "gents-cottage.firebaseapp.com",
+            projectId: "gents-cottage",
+            storageBucket: "gents-cottage.firebasestorage.app",
+            messagingSenderId: "827979587396",
+            appId: "1:827979587396:web:be87aaf1861b1ce84f4111"
+        };
+
+
+        const app = initializeApp(firebaseConfig);
+
+        const db = getFirestore(app);
+
+
+        console.log("Admin Firebase Connected!");
+
+
+        const ordersList =
+            document.querySelector("#orders-list");
+
+        const totalOrders =
+            document.querySelector("#total-orders");
+
+        const pendingOrders =
+            document.querySelector("#pending-orders");
+
+            const deliveredOrders =
+    document.querySelector("#delivered-orders");
+
+
+        async function updateOrderStatus(orderId, newStatus) {
+
+            try {
+
+                const orderRef = doc(
+                    db,
+                    "orders",
+                    orderId
+                );
+
+                await updateDoc(orderRef, {
+                    status: newStatus
+                });
+
+                console.log(
+                    "Status updated successfully!"
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "Status update error:",
+                    error
+                );
+
+            }
+
+        }
+
+        async function deleteOrder(orderId) {
+
+            const confirmDelete =
+                confirm("Are you sure you want to delete this order?");
+
+            if (!confirmDelete) {
+                return;
+            }
+
+            try {
+
+                const orderRef = doc(
+                    db,
+                    "orders",
+                    orderId
+                );
+
+                await deleteDoc(orderRef);
+
+                console.log("Order deleted successfully!");
+
+                loadOrders();
+
+            } catch (error) {
+
+                console.error(
+                    "Delete order error:",
+                    error
+                );
+
+                alert("Failed to delete order.");
+
+            }
+
+        }
+
+        async function loadOrders() {
+
+            try {
+
+                const snapshot =
+                    await getDocs(
+                        collection(db, "orders")
+                    );
+
+                ordersList.innerHTML = "";
+
+                let total = 0;
+                let pending = 0;
+                let delivered = 0;
+
+
+                snapshot.forEach(function (doc) {
+
+                    const order = doc.data();
+
+                    total++;
+
+                    if (order.status === "Pending") {
+                        pending++;
+                    }
+
+                    if (order.status === "Delivered") {
+                        delivered++;
+                    }
+
+                    const orderBox =
+                        document.createElement("div");
+
+
+                    orderBox.innerHTML = `
+    <h3>
+        <i class="fa-solid fa-user"></i>
+        ${order.customerName}
+    </h3>
+    
+    <p class="admin-order-id">
+    <i class="fa-solid fa-hashtag"></i>
+    Order ID:
+    <strong>
+        GC-${order.createdAt?.toDate
+                            ? order.createdAt.toDate().toISOString().slice(0, 10).replace(/-/g, "")
+                            : "--------"}-${doc.id.slice(0, 3).toUpperCase()}
+    </strong>
+</p>
+
+    <p>
+        <i class="fa-solid fa-phone"></i>
+        ${order.customerPhone}
+    </p>
+
+    <p>
+        <i class="fa-solid fa-location-dot"></i>
+        ${order.customerAddress}
+    </p>
+
+    <div class="admin-products">
+
+        <strong>Ordered Products</strong>
+
+        ${(order.products || []).map(function (product) {
+
+                                return `
+                <div class="admin-product">
+
+                    <span>
+                        ${product.name}
+                    </span>
+
+                    <small>
+                        Size: ${product.size}
+                        | Qty: ${product.quantity}
+                    </small>
+
+                    <b>
+                        ৳${product.price * product.quantity}
+                    </b>
+
+                </div>
+            `;
+
+                            }).join("")}
+
+    </div>
+
+    <p>
+        <strong>Total Items:</strong>
+        ${order.totalItems}
+    </p>
+
+    <p>
+        <strong>Total:</strong>
+        ৳${order.totalPrice}
+    </p>
+
+    <p>
+    <strong>Status:</strong>
+
+    <span class="order-status status-${(order.status || "Pending").toLowerCase()}">
+        ${order.status || "Pending"}
+    </span>
+</p>
+
+<div class="status-control">
+
+    <label>Change Status:</label>
+
+    <select class="status-select" data-id="${doc.id}">
+
+        <option value="Pending"
+            ${(order.status || "Pending") === "Pending" ? "selected" : ""}>
+            Pending
+        </option>
+
+        <option value="Confirmed"
+            ${order.status === "Confirmed" ? "selected" : ""}>
+            Confirmed
+        </option>
+
+        <option value="Delivered"
+            ${order.status === "Delivered" ? "selected" : ""}>
+            Delivered
+        </option>
+
+        <option value="Cancelled"
+            ${order.status === "Cancelled" ? "selected" : ""}>
+            Cancelled
+        </option>
+
+    </select>
+
+</div>
+
+<button class="delete-order-btn" data-id="${doc.id}">
+    <i class="fa-solid fa-trash"></i>
+    Delete Order
+</button>
+
+    <hr>
+`;
+
+                    ordersList.appendChild(orderBox);
+                    const statusSelect =
+                        orderBox.querySelector(".status-select");
+
+                    const deleteButton =
+                        orderBox.querySelector(".delete-order-btn");
+
+                    deleteButton.addEventListener("click", function () {
+
+                        deleteOrder(this.dataset.id);
+
+                    });
+
+                    statusSelect.addEventListener("change", async function () {
+
+                        await updateOrderStatus(
+                            doc.id,
+                            this.value
+                        );
+
+                        loadOrders();
+
+                    });
+
+                });
+
+
+                totalOrders.textContent = total;
+
+                pendingOrders.textContent = pending;
+
+                deliveredOrders.textContent = delivered;
+
+
+            } catch (error) {
+
+                console.error("Error loading orders:", error);
+
+                ordersList.innerHTML =
+                    "<p>Failed to load orders.</p>";
+
+            }
+        }
+
+        const searchInput =
+            document.querySelector("#order-search");
+
+        searchInput.addEventListener("input", function () {
+
+            const searchText =
+                this.value.toLowerCase().trim();
+
+            const orderCards =
+                document.querySelectorAll("#orders-list > div");
+
+            orderCards.forEach(function (card) {
+
+                const cardText =
+                    card.textContent.toLowerCase();
+
+                if (cardText.includes(searchText)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+
+            });
+
+        });
+
+
+        loadOrders();
+
+    </script>
+
+
+
+</body>
+
+</html>
