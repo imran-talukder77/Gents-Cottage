@@ -1137,3 +1137,41 @@ orderForm.addEventListener("submit", async function (event) {
     }
 
 });
+
+
+
+
+// ======================================================
+// CATEGORY SHOP NOW BUTTON
+// ======================================================
+
+const categoryShopButtons = document.querySelectorAll(".category-shop");
+
+categoryShopButtons.forEach(button => {
+
+    button.addEventListener("click", function (event) {
+
+        event.preventDefault();
+
+        const category = this.dataset.category;
+
+        // Find matching filter button
+        const filterButton = document.querySelector(
+            `.filter-btn[data-filter="${category}"]`
+        );
+
+        if (filterButton) {
+
+            // Click the filter button
+            filterButton.click();
+
+        }
+
+        // Scroll to products
+        document.querySelector("#products").scrollIntoView({
+            behavior: "smooth"
+        });
+
+    });
+
+});
