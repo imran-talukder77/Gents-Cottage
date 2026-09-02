@@ -224,7 +224,9 @@ const addCartButtons =
 
 // Actual cart array
 
-let cart = [];
+let cart = JSON.parse(
+    localStorage.getItem("cart")
+) || [];
 
 
 
@@ -234,9 +236,7 @@ let cart = [];
 
 function openCart() {
 
-    // Cart already open থাকলে
-    // নতুন history add হবে না
-
+    // Cart already open হলে
     if (
         cartDrawer.classList.contains("active")
     ) {
@@ -246,20 +246,24 @@ function openCart() {
     }
 
 
-    // Cart open
-
+    // Open cart
     cartDrawer.classList.add("active");
 
     cartOverlay.classList.add("active");
 
 
-    // Browser history add
+    // Add history only if not already #cart
+    if (
+        location.hash !== "#cart"
+    ) {
 
-    history.pushState(
-        { cartOpen: true },
-        "",
-        "#cart"
-    );
+        history.pushState(
+            { cartOpen: true },
+            "",
+            "#cart"
+        );
+
+    }
 
 }
 
@@ -288,15 +292,13 @@ cartIcon.addEventListener(
 
 function closeCart(fromBack = false) {
 
-    // Cart close
-
+    // Close cart
     cartDrawer.classList.remove("active");
 
     cartOverlay.classList.remove("active");
 
 
-    // Normal close হলে history back
-
+    // যদি Browser Back থেকে close না হয়
     if (
         !fromBack &&
         location.hash === "#cart"
@@ -457,10 +459,10 @@ addCartButtons.forEach(function (button) {
                     return (
 
                         item.name ===
-                            productName &&
+                        productName &&
 
                         item.size ===
-                            size
+                        size
 
                     );
 
@@ -556,6 +558,12 @@ addCartButtons.forEach(function (button) {
 // =========================
 
 function updateCart() {
+
+    // Save cart to localStorage
+    localStorage.setItem(
+        "cart",
+        JSON.stringify(cart)
+    );
 
     cartItems.innerHTML = "";
 
@@ -1012,6 +1020,14 @@ checkoutBtn.addEventListener(
             "active"
         );
 
+        // Add checkout to browser history
+
+        history.pushState(
+            { checkoutOpen: true },
+            "",
+            "#checkout"
+        );
+
 
 
         // Form show
@@ -1028,16 +1044,30 @@ checkoutBtn.addEventListener(
 // CLOSE CHECKOUT
 // =========================
 
-function closeCheckout() {
+function closeCheckout(fromBack = false) {
+
+    // Close checkout
 
     checkoutModal.classList.remove(
         "active"
     );
 
-
     checkoutOverlay.classList.remove(
         "active"
     );
+
+
+    // Normal close হলে
+    // browser history থেকে checkout remove হবে
+
+    if (
+        !fromBack &&
+        location.hash === "#checkout"
+    ) {
+
+        history.back();
+
+    }
 
 }
 
@@ -1290,6 +1320,15 @@ orderForm.addEventListener(
     async function (event) {
 
         event.preventDefault();
+        const submitButton =
+            orderForm.querySelector(
+                'button[type="submit"]'
+            );
+
+        submitButton.disabled = true;
+
+        submitButton.textContent =
+            "PROCESSING...";
 
 
 
@@ -1581,6 +1620,14 @@ orderForm.addEventListener(
             openSuccessPopup();
 
 
+            // Reset submit button
+
+            submitButton.disabled = false;
+
+            submitButton.textContent =
+                "PLACE ORDER";
+
+
 
         } catch (error) {
 
@@ -1589,10 +1636,15 @@ orderForm.addEventListener(
                 error
             );
 
-
             alert(
                 "Something went wrong. Please try again."
             );
+
+            // আবার order button চালু করো
+            submitButton.disabled = false;
+
+            submitButton.textContent =
+                "PLACE ORDER";
 
         }
 
@@ -1669,22 +1721,19 @@ window.addEventListener(
     "popstate",
     function () {
 
-        // Checkout open থাকলে
-
+        // Close checkout if open
         if (
             checkoutModal.classList.contains(
                 "active"
             )
         ) {
 
-            closeCheckout();
+            closeCheckout(true);
 
         }
 
 
-
-        // Cart open থাকলে
-
+        // Close cart if open
         if (
             cartDrawer.classList.contains(
                 "active"
@@ -1697,3 +1746,11 @@ window.addEventListener(
 
     }
 );
+
+
+
+
+
+// Load saved cart when page opens
+
+updateCart();
