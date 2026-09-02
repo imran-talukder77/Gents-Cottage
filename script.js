@@ -310,11 +310,18 @@ addCartButtons.forEach(function (button) {
 const cartDrawer = document.querySelector(".cart-drawer");
 const cartOverlay = document.querySelector(".cart-overlay");
 const cartClose = document.querySelector(".cart-close");
-const cartIcon = document.querySelector('.nav-icons a[href="#cart"]');
 
-const cartItems = document.querySelector(".cart-items");
-const cartItemTotal = document.querySelector(".cart-item-total");
-const cartTotalPrice = document.querySelector(".cart-total-price");
+const cartIcon =
+    document.querySelector('.nav-icons a[href="#cart"]');
+
+const cartItems =
+    document.querySelector(".cart-items");
+
+const cartItemTotal =
+    document.querySelector(".cart-item-total");
+
+const cartTotalPrice =
+    document.querySelector(".cart-total-price");
 
 const continueShopping =
     document.querySelector(".continue-shopping");
@@ -327,12 +334,40 @@ let cart = [];
 // OPEN CART
 // =========================
 
+function openCart() {
+
+    // Cart আগে থেকেই open থাকলে
+    // নতুন history add হবে না
+    if (cartDrawer.classList.contains("active")) {
+        return;
+    }
+
+
+    // Cart open
+    cartDrawer.classList.add("active");
+
+    cartOverlay.classList.add("active");
+
+
+    // Browser history add
+    history.pushState(
+        { cartOpen: true },
+        "",
+        "#cart"
+    );
+
+}
+
+
+// =========================
+// CART ICON CLICK
+// =========================
+
 cartIcon.addEventListener("click", function (event) {
 
     event.preventDefault();
 
-    cartDrawer.classList.add("active");
-    cartOverlay.classList.add("active");
+    openCart();
 
 });
 
@@ -341,21 +376,92 @@ cartIcon.addEventListener("click", function (event) {
 // CLOSE CART
 // =========================
 
-function closeCart() {
+function closeCart(fromBack = false) {
 
+    // Cart close
     cartDrawer.classList.remove("active");
 
     cartOverlay.classList.remove("active");
 
+
+    // Normal close হলে history back
+    if (
+        !fromBack &&
+        location.hash === "#cart"
+    ) {
+
+        history.back();
+
+    }
+
 }
 
 
-cartClose.addEventListener("click", closeCart);
+// =========================
+// CLOSE BUTTON
+// =========================
 
-cartOverlay.addEventListener("click", closeCart);
+cartClose.addEventListener(
+    "click",
+    function () {
 
-continueShopping.addEventListener("click", closeCart);
+        closeCart();
 
+    }
+);
+
+
+// =========================
+// OVERLAY CLICK
+// =========================
+
+cartOverlay.addEventListener(
+    "click",
+    function () {
+
+        closeCart();
+
+    }
+);
+
+
+// =========================
+// CONTINUE SHOPPING
+// =========================
+
+if (continueShopping) {
+
+    continueShopping.addEventListener(
+        "click",
+        function () {
+
+            closeCart();
+
+        }
+    );
+
+}
+
+
+// =========================
+// PHONE / BROWSER BACK BUTTON
+// =========================
+
+window.addEventListener(
+    "popstate",
+    function () {
+
+        // Cart open থাকলে close হবে
+        if (
+            cartDrawer.classList.contains("active")
+        ) {
+
+            closeCart(true);
+
+        }
+
+    }
+);
 
 
 // =========================
@@ -369,57 +475,97 @@ addCartButtons.forEach(function (button) {
         const productCard =
             button.closest(".product-card");
 
+
         const selectedSize =
-            productCard.querySelector(".size-btn.active");
+            productCard.querySelector(
+                ".size-btn.active"
+            );
+
 
         const sizeError =
-            productCard.querySelector(".size-error");
+            productCard.querySelector(
+                ".size-error"
+            );
 
 
-        // Size check
+        // =========================
+        // SIZE CHECK
+        // =========================
 
         if (!selectedSize) {
 
-            sizeError.style.display = "block";
+            sizeError.style.display =
+                "block";
 
             return;
 
         }
 
 
-        sizeError.style.display = "none";
+        sizeError.style.display =
+            "none";
 
 
-        // Product information
+        // =========================
+        // PRODUCT INFORMATION
+        // =========================
 
         const productName =
-            productCard.querySelector("h3").textContent.trim();
+            productCard
+                .querySelector("h3")
+                .textContent
+                .trim();
+
 
         const productImage =
-            productCard.querySelector("img").src;
+            productCard
+                .querySelector("img")
+                .src;
+
 
         const productPrice =
-            productCard.querySelector(".price span").textContent.trim();
+            productCard
+                .querySelector(".price span")
+                .textContent
+                .trim();
+
 
         const priceNumber =
-            parseInt(productPrice.replace(/[^\d]/g, ""));
+            parseInt(
+                productPrice.replace(
+                    /[^\d]/g,
+                    ""
+                )
+            );
 
 
         const size =
             selectedSize.dataset.size;
 
 
-        // Check existing product
+        // =========================
+        // CHECK EXISTING PRODUCT
+        // =========================
 
-        const existingProduct = cart.find(function (item) {
+        const existingProduct =
+            cart.find(function (item) {
 
-            return (
-                item.name === productName &&
-                item.size === size
-            );
+                return (
 
-        });
+                    item.name ===
+                        productName &&
 
+                    item.size ===
+                        size
+
+                );
+
+            });
+
+
+        // =========================
+        // ADD PRODUCT
+        // =========================
 
         if (existingProduct) {
 
@@ -429,40 +575,51 @@ addCartButtons.forEach(function (button) {
 
             cart.push({
 
-                name: productName,
+                name:
+                    productName,
 
-                image: productImage,
+                image:
+                    productImage,
 
-                price: priceNumber,
+                price:
+                    priceNumber,
 
-                size: size,
+                size:
+                    size,
 
-                quantity: 1
+                quantity:
+                    1
 
             });
 
         }
 
 
-        // Update cart
+        // =========================
+        // UPDATE CART
+        // =========================
 
         updateCart();
 
 
-        // Open cart automatically
+        // =========================
+        // OPEN CART
+        // =========================
 
-        cartDrawer.classList.add("active");
-
-        cartOverlay.classList.add("active");
+        openCart();
 
 
-        // Button feedback
+        // =========================
+        // BUTTON FEEDBACK
+        // =========================
 
         const originalText =
             button.innerHTML;
 
+
         button.innerHTML =
             '<i class="fa-solid fa-check"></i> ADDED';
+
 
         button.style.background =
             "#27ae60";
@@ -472,6 +629,7 @@ addCartButtons.forEach(function (button) {
 
             button.innerHTML =
                 originalText;
+
 
             button.style.background =
                 "#222";
@@ -483,7 +641,6 @@ addCartButtons.forEach(function (button) {
 });
 
 
-
 // =========================
 // UPDATE CART
 // =========================
@@ -493,7 +650,9 @@ function updateCart() {
     cartItems.innerHTML = "";
 
 
-    // Empty cart
+    // =========================
+    // EMPTY CART
+    // =========================
 
     if (cart.length === 0) {
 
@@ -502,18 +661,27 @@ function updateCart() {
             <div class="empty-cart">
 
                 <div class="empty-cart-icon">
+
                     <i class="fa-solid fa-cart-shopping"></i>
+
                 </div>
 
-                <h3>Your Cart is Empty</h3>
+
+                <h3>
+                    Your Cart is Empty
+                </h3>
+
 
                 <p>
                     Looks like you haven't added
                     anything to your cart yet.
                 </p>
 
+
                 <button class="continue-shopping">
+
                     CONTINUE SHOPPING
+
                 </button>
 
             </div>
@@ -521,74 +689,124 @@ function updateCart() {
         `;
 
 
+        // নতুন button dynamically তৈরি হওয়ায়
+        // আবার event দিতে হবে
+
         const newContinueButton =
-            cartItems.querySelector(".continue-shopping");
-
-        newContinueButton.addEventListener(
-            "click",
-            closeCart
-        );
+            cartItems.querySelector(
+                ".continue-shopping"
+            );
 
 
-        cartItemTotal.textContent = "0";
+        if (newContinueButton) {
 
-        cartTotalPrice.textContent = "৳0";
+            newContinueButton.addEventListener(
+                "click",
+                function () {
+
+                    closeCart();
+
+                }
+            );
+
+        }
+
+
+        cartCount.textContent =
+            "0";
+
+
+        cartItemTotal.textContent =
+            "0";
+
+
+        cartTotalPrice.textContent =
+            "৳0";
+
 
         return;
 
     }
 
 
-    // Create cart products
+    // =========================
+    // CREATE CART PRODUCTS
+    // =========================
 
     cart.forEach(function (item, index) {
 
         const cartProduct =
             document.createElement("div");
 
-        cartProduct.className = "cart-product";
+
+        cartProduct.className =
+            "cart-product";
 
 
         cartProduct.innerHTML = `
 
             <div class="cart-product-image">
 
-                <img src="${item.image}"
-                     alt="${item.name}">
+                <img
+                    src="${item.image}"
+                    alt="${item.name}"
+                >
 
             </div>
 
 
             <div class="cart-product-info">
 
-                <h3>${item.name}</h3>
+                <h3>
+                    ${item.name}
+                </h3>
+
 
                 <p class="cart-product-size">
-                    Size: <strong>${item.size}</strong>
+
+                    Size:
+                    <strong>
+                        ${item.size}
+                    </strong>
+
                 </p>
+
 
                 <div class="cart-product-bottom">
 
                     <strong>
-                        ৳${item.price}
+
+                        ৳${item.price.toLocaleString()}
+
                     </strong>
+
 
                     <div class="quantity-box">
 
                         <button
                             class="quantity-minus"
-                            data-index="${index}">
+                            data-index="${index}"
+                        >
+
                             −
+
                         </button>
 
+
                         <span>
+
                             ${item.quantity}
+
                         </span>
+
 
                         <button
                             class="quantity-plus"
-                            data-index="${index}">
+                            data-index="${index}"
+                        >
+
                             +
+
                         </button>
 
                     </div>
@@ -600,7 +818,8 @@ function updateCart() {
 
             <button
                 class="remove-cart"
-                data-index="${index}">
+                data-index="${index}"
+            >
 
                 <i class="fa-solid fa-trash"></i>
 
@@ -609,83 +828,131 @@ function updateCart() {
         `;
 
 
-        cartItems.appendChild(cartProduct);
+        cartItems.appendChild(
+            cartProduct
+        );
 
     });
 
 
-    // Quantity buttons
+    // =========================
+    // QUANTITY MINUS
+    // =========================
 
     const minusButtons =
-        document.querySelectorAll(".quantity-minus");
-
-    const plusButtons =
-        document.querySelectorAll(".quantity-plus");
+        document.querySelectorAll(
+            ".quantity-minus"
+        );
 
 
     minusButtons.forEach(function (button) {
 
-        button.addEventListener("click", function () {
+        button.addEventListener(
+            "click",
+            function () {
 
-            const index =
-                Number(button.dataset.index);
+                const index =
+                    Number(
+                        button.dataset.index
+                    );
 
-            if (cart[index].quantity > 1) {
 
-                cart[index].quantity--;
+                if (
+                    cart[index].quantity > 1
+                ) {
 
-            } else {
+                    cart[index].quantity--;
 
-                cart.splice(index, 1);
+                } else {
+
+                    cart.splice(
+                        index,
+                        1
+                    );
+
+                }
+
+
+                updateCart();
 
             }
-
-            updateCart();
-
-        });
+        );
 
     });
+
+
+    // =========================
+    // QUANTITY PLUS
+    // =========================
+
+    const plusButtons =
+        document.querySelectorAll(
+            ".quantity-plus"
+        );
 
 
     plusButtons.forEach(function (button) {
 
-        button.addEventListener("click", function () {
+        button.addEventListener(
+            "click",
+            function () {
 
-            const index =
-                Number(button.dataset.index);
+                const index =
+                    Number(
+                        button.dataset.index
+                    );
 
-            cart[index].quantity++;
 
-            updateCart();
+                cart[index].quantity++;
 
-        });
+
+                updateCart();
+
+            }
+        );
 
     });
 
 
-    // Remove buttons
+    // =========================
+    // REMOVE PRODUCT
+    // =========================
 
     const removeButtons =
-        document.querySelectorAll(".remove-cart");
+        document.querySelectorAll(
+            ".remove-cart"
+        );
 
 
     removeButtons.forEach(function (button) {
 
-        button.addEventListener("click", function () {
+        button.addEventListener(
+            "click",
+            function () {
 
-            const index =
-                Number(button.dataset.index);
+                const index =
+                    Number(
+                        button.dataset.index
+                    );
 
-            cart.splice(index, 1);
 
-            updateCart();
+                cart.splice(
+                    index,
+                    1
+                );
 
-        });
+
+                updateCart();
+
+            }
+        );
 
     });
 
 
-    // Total quantity
+    // =========================
+    // CALCULATE TOTAL
+    // =========================
 
     let totalItems = 0;
 
@@ -694,30 +961,42 @@ function updateCart() {
 
     cart.forEach(function (item) {
 
-        totalItems += item.quantity;
+        totalItems +=
+            item.quantity;
+
 
         totalPrice +=
-            item.price * item.quantity;
+
+            item.price *
+            item.quantity;
 
     });
 
 
-    // Update navbar count
+    // =========================
+    // UPDATE NAVBAR COUNT
+    // =========================
 
     cartCount.textContent =
         totalItems;
 
 
-    // Update cart header
+    // =========================
+    // UPDATE CART HEADER
+    // =========================
 
     cartItemTotal.textContent =
         totalItems;
 
 
-    // Update total price
+    // =========================
+    // UPDATE TOTAL PRICE
+    // =========================
 
     cartTotalPrice.textContent =
-        "৳" + totalPrice.toLocaleString();
+
+        "৳" +
+        totalPrice.toLocaleString();
 
 }
 
@@ -761,23 +1040,45 @@ const checkoutTotalPrice =
 
 checkoutBtn.addEventListener("click", function () {
 
-    // Cart empty হলে checkout হবে না
     if (cart.length === 0) {
         alert("Your cart is empty!");
         return;
     }
 
-    // Checkout products দেখানো
     updateCheckout();
 
-    // Cart drawer বন্ধ
-    closeCart();
+    function closeCart() {
 
-    // Checkout modal open
-    checkoutModal.classList.add("active");
-    checkoutOverlay.classList.add("active");
+        cartDrawer.classList.remove("active");
+
+        cartOverlay.classList.remove("active");
+
+    }
+
+    // Browser history তে checkout যোগ করা
+    history.pushState(
+        { checkoutOpen: true },
+        "",
+        "#checkout"
+    );
 
 });
+
+
+// // =========================
+// // PHONE / BROWSER BACK BUTTON
+// // =========================
+
+// window.addEventListener("popstate", function () {
+
+//     // Checkout open থাকলে বন্ধ হবে
+//     if (checkoutModal.classList.contains("active")) {
+
+//         closeCheckout();
+
+//     }
+
+// });
 
 
 // =========================
@@ -792,15 +1093,26 @@ function closeCheckout() {
 
 }
 
-checkoutClose.addEventListener(
-    "click",
-    closeCheckout
-);
+checkoutClose.addEventListener("click", function () {
 
-checkoutOverlay.addEventListener(
-    "click",
-    closeCheckout
-);
+    closeCheckout();
+
+    if (location.hash === "#checkout") {
+        history.back();
+    }
+
+});
+
+
+checkoutOverlay.addEventListener("click", function () {
+
+    closeCheckout();
+
+    if (location.hash === "#checkout") {
+        history.back();
+    }
+
+});
 
 
 // =========================
@@ -998,6 +1310,13 @@ successOverlay.addEventListener(
 
 // ======================================================================================================================================================================
 
+
+// ======================================================
+// order form submit
+// ======================================================
+
+
+
 orderForm.addEventListener("submit", async function (event) {
 
     event.preventDefault();
@@ -1173,5 +1492,35 @@ categoryShopButtons.forEach(button => {
         });
 
     });
+
+});
+
+
+
+
+
+
+
+
+
+// =========================
+// PHONE BACK BUTTON SYSTEM
+// =========================
+
+window.addEventListener("popstate", function () {
+
+    // Checkout open থাকলে
+    if (checkoutModal.classList.contains("active")) {
+
+        closeCheckout();
+
+    }
+
+    // Cart open থাকলে
+    if (cartDrawer.classList.contains("active")) {
+
+        closeCart();
+
+    }
 
 });
