@@ -158,15 +158,18 @@ header {
 /* ............................................................................................................ */
 
 
-
-
 /* =========================
    CATEGORIES SECTION
 ========================= */
 
 .categories {
-    padding: 30px 8%;
-    background-color: #ffffff;
+    padding: 80px 7%;
+    background: linear-gradient(
+        135deg,
+        #f8faff 0%,
+        #f4f7ff 50%,
+        #fff7f2 100%
+    );
 }
 
 
@@ -176,12 +179,38 @@ header {
 
 .section-title {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
 }
 
 .section-title h2 {
     font-size: 38px;
-    color: #222;
+    font-weight: 800;
+    color: #111827;
+    position: relative;
+    display: inline-block;
+    letter-spacing: -1px;
+}
+
+/* Title underline */
+
+.section-title h2::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -14px;
+    transform: translateX(-50%);
+
+    width: 75px;
+    height: 4px;
+
+    border-radius: 50px;
+
+    background: linear-gradient(
+        90deg,
+        #ff4d4d,
+        #ff9f1c,
+        #6c63ff
+    );
 }
 
 
@@ -190,12 +219,10 @@ header {
 ========================= */
 
 .category-container {
-    max-width: 1200px;
+    max-width: 1250px;
     margin: auto;
 
     display: grid;
-
-    /* PC তে ৪টা পাশাপাশি */
     grid-template-columns: repeat(4, 1fr);
 
     gap: 25px;
@@ -207,27 +234,65 @@ header {
 ========================= */
 
 .category-card {
-    padding: 40px 20px;
+    position: relative;
+    overflow: hidden;
+
+    background: rgba(255, 255, 255, 0.95);
+
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 22px;
+
+    padding: 38px 25px;
 
     text-align: center;
 
-    border-radius: 18px;
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.06);
 
-    background: linear-gradient(145deg,
-            #ffffff,
-            #f7f5ff);
-
-    border: 1px solid #eeeeee;
-
-    transition: 0.3s;
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease,
+        border-color 0.35s ease;
 }
 
+
+/* Color decoration */
+
+.category-card::before {
+    content: "";
+
+    position: absolute;
+    top: -80px;
+    right: -80px;
+
+    width: 160px;
+    height: 160px;
+
+    border-radius: 50%;
+
+    background: linear-gradient(
+        135deg,
+        rgba(108, 99, 255, 0.15),
+        rgba(255, 77, 77, 0.12)
+    );
+
+    transition: 0.4s ease;
+}
+
+
+/* Hover */
 
 .category-card:hover {
     transform: translateY(-10px);
 
+    border-color: rgba(108, 99, 255, 0.25);
+
     box-shadow:
-        0 15px 35px rgba(108, 60, 233, 0.15);
+        0 20px 45px rgba(0, 0, 0, 0.12);
+}
+
+.category-card:hover::before {
+    transform: scale(1.4);
 }
 
 
@@ -239,47 +304,133 @@ header {
     width: 85px;
     height: 85px;
 
-    margin: 0 auto 20px;
-
-    border-radius: 50%;
-
-    background: linear-gradient(135deg,
-            #6c3ce9,
-            #e67e22);
-
-    color: white;
+    margin: 0 auto 22px;
 
     display: flex;
-
-    align-items: center;
     justify-content: center;
+    align-items: center;
+
+    border-radius: 24px;
+
+    font-size: 34px;
+
+    background: linear-gradient(
+        135deg,
+        #6c63ff,
+        #8b5cf6
+    );
+
+    color: #ffffff;
+
+    box-shadow:
+        0 10px 25px rgba(108, 99, 255, 0.25);
+
+    position: relative;
+    z-index: 1;
+
+    transition:
+        transform 0.35s ease,
+        border-radius 0.35s ease;
 }
 
+.category-card:hover .category-icon {
+    transform: rotate(-5deg) scale(1.08);
 
-.category-icon i {
-    font-size: 32px;
+    border-radius: 50%;
 }
 
 
 /* =========================
-   CATEGORY TEXT
+   DIFFERENT CARD COLORS
+========================= */
+
+/* T-Shirts */
+
+.category-card:nth-child(1) .category-icon {
+    background: linear-gradient(
+        135deg,
+        #ff4d4d,
+        #ff7676
+    );
+
+    box-shadow:
+        0 10px 25px rgba(255, 77, 77, 0.25);
+}
+
+
+/* Shirts */
+
+.category-card:nth-child(2) .category-icon {
+    background: linear-gradient(
+        135deg,
+        #6c63ff,
+        #8b5cf6
+    );
+
+    box-shadow:
+        0 10px 25px rgba(108, 99, 255, 0.25);
+}
+
+
+/* Polo */
+
+.category-card:nth-child(3) .category-icon {
+    background: linear-gradient(
+        135deg,
+        #00b894,
+        #00cec9
+    );
+
+    box-shadow:
+        0 10px 25px rgba(0, 184, 148, 0.25);
+}
+
+
+/* Pants */
+
+.category-card:nth-child(4) .category-icon {
+    background: linear-gradient(
+        135deg,
+        #ff9f1c,
+        #ffbe0b
+    );
+
+    box-shadow:
+        0 10px 25px rgba(255, 159, 28, 0.25);
+}
+
+
+/* =========================
+   CATEGORY TITLE
 ========================= */
 
 .category-card h3 {
-    font-size: 20px;
+    position: relative;
+    z-index: 1;
 
-    color: #222;
+    font-size: 22px;
+    font-weight: 700;
+
+    color: #111827;
 
     margin-bottom: 10px;
 }
 
 
+/* =========================
+   CATEGORY DESCRIPTION
+========================= */
+
 .category-card p {
-    color: #777;
+    position: relative;
+    z-index: 1;
 
-    font-size: 13px;
+    font-size: 14px;
+    line-height: 1.6;
 
-    margin-bottom: 20px;
+    color: #6b7280;
+
+    margin-bottom: 25px;
 }
 
 
@@ -287,25 +438,99 @@ header {
    SHOP NOW BUTTON
 ========================= */
 
-.category-card a {
+.category-shop {
+    position: relative;
+    z-index: 1;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
     text-decoration: none;
 
-    color: #6c3ce9;
+    padding: 11px 20px;
+
+    border-radius: 50px;
 
     font-size: 13px;
     font-weight: 700;
 
-    transition: 0.3s;
+    letter-spacing: 0.5px;
+
+    color: #ffffff;
+
+    background: #111827;
+
+    transition:
+        background 0.3s ease,
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
 }
 
 
-.category-card a i {
-    margin-left: 5px;
+/* Arrow */
+
+.category-shop i {
+    font-size: 12px;
+
+    transition: transform 0.3s ease;
 }
 
 
-.category-card a:hover {
-    color: #e67e22;
+/* Button hover */
+
+.category-shop:hover {
+    background: linear-gradient(
+        135deg,
+        #6c63ff,
+        #8b5cf6
+    );
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 20px rgba(108, 99, 255, 0.25);
+}
+
+.category-shop:hover i {
+    transform: translateX(5px);
+}
+
+
+/* Different button hover colors */
+
+.category-card:nth-child(1) .category-shop:hover {
+    background: linear-gradient(
+        135deg,
+        #ff4d4d,
+        #ff7676
+    );
+}
+
+.category-card:nth-child(2) .category-shop:hover {
+    background: linear-gradient(
+        135deg,
+        #6c63ff,
+        #8b5cf6
+    );
+}
+
+.category-card:nth-child(3) .category-shop:hover {
+    background: linear-gradient(
+        135deg,
+        #00b894,
+        #00cec9
+    );
+}
+
+.category-card:nth-child(4) .category-shop:hover {
+    background: linear-gradient(
+        135deg,
+        #ff9f1c,
+        #ffbe0b
+    );
 }
 
 
@@ -326,68 +551,38 @@ header {
    MOBILE RESPONSIVE
 ========================= */
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
 
     .categories {
         padding: 60px 20px;
     }
 
-
     .section-title {
-        margin-bottom: 30px;
+        margin-bottom: 40px;
     }
-
 
     .section-title h2 {
         font-size: 28px;
     }
 
-
     .category-container {
-
-        /* Mobile এ ২টা করে */
-        grid-template-columns: repeat(2, 1fr);
-
-        gap: 15px;
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
-
 
     .category-card {
-        padding: 25px 10px;
-
-        border-radius: 14px;
+        padding: 32px 20px;
     }
-
 
     .category-icon {
-        width: 65px;
-        height: 65px;
+        width: 75px;
+        height: 75px;
 
-        margin-bottom: 15px;
+        font-size: 30px;
     }
-
-
-    .category-icon i {
-        font-size: 25px;
-    }
-
 
     .category-card h3 {
-        font-size: 16px;
-
-        margin-bottom: 7px;
-    }
-
-
-    .category-card p {
-        font-size: 11px;
-
-        margin-bottom: 15px;
-    }
-
-
-    .category-card a {
-        font-size: 11px;
+        font-size: 20px;
     }
 
 }
