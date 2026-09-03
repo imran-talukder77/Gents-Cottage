@@ -244,7 +244,7 @@
                         NEW
                     </span>
 
-            
+
 
                     <img src="image/product1.jpg" alt="Premium Casual Shirt">
 
@@ -322,7 +322,7 @@
                         SALE
                     </span>
 
-                    
+
 
                     <img src="image/product2.jpg" alt="Classic Formal Shirt">
 
@@ -382,7 +382,7 @@
                         NEW
                     </span>
 
-                    
+
 
                     <img src="image/product3.avif" alt="Premium Oxford Shirt">
 
@@ -442,7 +442,7 @@
                         NEW
                     </span>
 
-                    
+
 
                     <img src="image/product4.avif" alt="Slim Fit Premium Shirt">
 
@@ -502,7 +502,7 @@
                         NEW
                     </span>
 
-                
+
 
                     <img src="image/product5.png" alt="Premium Cotton T-Shirt">
 
@@ -558,7 +558,7 @@
                         SALE
                     </span>
 
-                    
+
 
                     <img src="image/product6.png" alt="Oversized Premium T-Shirt">
 
@@ -613,7 +613,7 @@
                         NEW
                     </span>
 
-                    
+
 
                     <img src="image/product7.png" alt="Basic Cotton T-Shirt">
 
@@ -668,7 +668,7 @@
                         NEW
                     </span>
 
-                    
+
 
                     <img src="image/product8.jpg" alt="Premium Graphic T-Shirt">
 
@@ -725,7 +725,7 @@
                         NEW
                     </span>
 
-                    
+
 
                     <img src="image/product9.jpg" alt="Premium Polo Shirt">
 
@@ -780,7 +780,7 @@
                         SALE
                     </span>
 
-                    
+
 
                     <img src="image/product10.jpg" alt="Classic Polo Shirt">
 
@@ -835,7 +835,7 @@
                         NEW
                     </span>
 
-                    
+
 
                     <img src="image/product11.webp" alt="Slim Fit Polo Shirt">
 
@@ -890,7 +890,7 @@
                         NEW
                     </span>
 
-                    
+
 
                     <img src="image/product12.webp" alt="Premium Casual Polo">
 
@@ -947,7 +947,7 @@
                         NEW
                     </span>
 
-                    
+
 
                     <img src="image/product13.webp" alt="Premium Casual Pants">
 
@@ -1002,7 +1002,7 @@
                         SALE
                     </span>
 
-                    
+
 
                     <img src="image/product14.avif" alt="Slim Fit Casual Pants">
 
@@ -1057,7 +1057,7 @@
                         NEW
                     </span>
 
-                   
+
 
                     <img src="image/product15.jpg" alt="Premium Formal Pants">
 
@@ -1112,7 +1112,7 @@
                         NEW
                     </span>
 
-                    
+
 
                     <img src="image/product16.webp" alt="Modern Cargo Pants">
 
@@ -1271,8 +1271,8 @@
      CHECKOUT FORM
 ========================= -->
 
-    
-<div class="checkout-modal">
+
+    <div class="checkout-modal">
         <div class="checkout-header">
 
             <div>
@@ -1321,7 +1321,9 @@
                         Full Name
                     </label>
 
-                    <input type="text" id="customer-name" placeholder="Enter your full name" required>
+                    <input type="text" id="customer-name" placeholder="Enter your full name">
+
+                    <p class="form-error" id="name-error"></p>
 
                 </div>
 
@@ -1332,8 +1334,8 @@
                         Phone Number
                     </label>
 
-                    <input type="tel" id="customer-phone" placeholder="01XXXXXXXXX" required>
-
+                    <input type="tel" id="customer-phone" placeholder="01XXXXXXXXX">
+                    <p class="form-error" id="phone-error"></p>
                 </div>
 
 
@@ -1343,8 +1345,9 @@
                         Delivery Address
                     </label>
 
-                    <textarea id="customer-address" rows="4" placeholder="Enter your complete delivery address"
-                        required></textarea>
+                    <textarea id="customer-address" rows="4" placeholder="Enter your complete delivery address"></textarea>
+
+                    <p class="form-error" id="address-error"></p>
 
                 </div>
 

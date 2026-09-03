@@ -59,75 +59,6 @@ filterButtons.forEach(function (button) {
 
 
 // =========================
-// WISHLIST
-// =========================
-
-const wishlistButtons =
-    document.querySelectorAll(".wishlist-product");
-
-const wishlistCount =
-    document.querySelector(".wishlist-count");
-
-
-let wishlistTotal = 0;
-
-
-wishlistButtons.forEach(function (button) {
-
-    button.addEventListener("click", function () {
-
-        const icon =
-            button.querySelector("i");
-
-
-        // Add Wishlist
-        if (icon.classList.contains("fa-regular")) {
-
-            icon.classList.remove("fa-regular");
-
-            icon.classList.add("fa-solid");
-
-
-            button.style.color =
-                "#e74c3c";
-
-
-            wishlistTotal++;
-
-
-            wishlistCount.textContent =
-                wishlistTotal;
-
-        }
-
-
-        // Remove Wishlist
-        else {
-
-            icon.classList.remove("fa-solid");
-
-            icon.classList.add("fa-regular");
-
-
-            button.style.color =
-                "#333";
-
-
-            wishlistTotal--;
-
-
-            wishlistCount.textContent =
-                wishlistTotal;
-
-        }
-
-    });
-
-});
-
-
-
-// =========================
 // SIZE SELECTION
 // =========================
 
@@ -1311,6 +1242,83 @@ successOverlay.addEventListener(
 
 
 
+// =========================
+// NAME ERROR CLEAR
+// =========================
+
+const customerNameInput =
+    document.querySelector("#customer-name");
+
+const nameError =
+    document.querySelector("#name-error");
+
+
+customerNameInput.addEventListener(
+    "input",
+    function () {
+
+        if (this.value.trim() !== "") {
+
+            nameError.textContent = "";
+
+        }
+
+    }
+);
+
+
+// =========================
+// PHONE ERROR CLEAR
+// =========================
+
+const customerPhoneInput =
+    document.querySelector("#customer-phone");
+
+const phoneError =
+    document.querySelector("#phone-error");
+
+customerPhoneInput.addEventListener(
+    "input",
+    function () {
+
+        const phone =
+            this.value.trim();
+
+        if (/^01[3-9]\d{8}$/.test(phone)) {
+
+            phoneError.textContent = "";
+
+        }
+
+    }
+);
+
+
+// =========================
+// ADDRESS ERROR CLEAR
+// =========================
+
+const customerAddressInput =
+    document.querySelector("#customer-address");
+
+const addressError =
+    document.querySelector("#address-error");
+
+customerAddressInput.addEventListener(
+    "input",
+    function () {
+
+        if (this.value.trim() !== "") {
+
+            addressError.textContent = "";
+
+        }
+
+    }
+);
+
+
+
 // ============================================================================
 // ORDER FORM SUBMIT
 // ============================================================================
@@ -1324,11 +1332,6 @@ orderForm.addEventListener(
             orderForm.querySelector(
                 'button[type="submit"]'
             );
-
-        submitButton.disabled = true;
-
-        submitButton.textContent =
-            "PROCESSING...";
 
 
 
@@ -1366,13 +1369,13 @@ orderForm.addEventListener(
         // NAME VALIDATION
         // =========================
 
-        if (
-            customerName === ""
-        ) {
+        if (customerName === "") {
 
-            alert(
-                "Please enter your name."
-            );
+            const nameError =
+                document.querySelector("#name-error");
+
+            nameError.textContent =
+                "Please enter your name.";
 
             return;
 
@@ -1384,16 +1387,41 @@ orderForm.addEventListener(
         // PHONE VALIDATION
         // =========================
 
-        if (
-            customerPhone === ""
-        ) {
+        if (customerPhone === "") {
 
-            alert(
-                "Please enter your phone number."
-            );
+            const phoneError =
+                document.querySelector("#phone-error");
+
+            phoneError.textContent =
+                "Please enter your phone number.";
+
+            phoneError.style.display =
+                "block";
 
             return;
 
+        }
+
+
+
+        // =========================
+        // BANGLADESH PHONE NUMBER VALIDATION
+        // =========================
+
+        const phonePattern = /^01[3-9]\d{8}$/;
+
+        if (!phonePattern.test(customerPhone)) {
+
+            const phoneError =
+                document.querySelector("#phone-error");
+
+            phoneError.textContent =
+                "Please enter a valid Bangladesh phone number.";
+
+            phoneError.style.display =
+                "block";
+
+            return;
         }
 
 
@@ -1402,16 +1430,18 @@ orderForm.addEventListener(
         // ADDRESS VALIDATION
         // =========================
 
-        if (
-            customerAddress === ""
-        ) {
+        if (customerAddress === "") {
 
-            alert(
-                "Please enter your delivery address."
-            );
+            const addressError =
+                document.querySelector("#address-error");
+
+            addressError.textContent =
+                "Please enter your delivery address.";
+
+            addressError.style.display =
+                "block";
 
             return;
-
         }
 
 
@@ -1420,20 +1450,20 @@ orderForm.addEventListener(
         // BANGLADESH PHONE PATTERN
         // =========================
 
-        const phonePattern =
-            /^01[3-9]\d{8}$/;
-
-
-
         if (
             !phonePattern.test(
                 customerPhone
             )
         ) {
 
-            alert(
-                "Please enter a valid Bangladesh phone number."
-            );
+            const phoneError =
+                document.querySelector("#phone-error");
+
+            phoneError.textContent =
+                "Please enter a valid Bangladesh phone number.";
+
+            phoneError.style.display =
+                "block";
 
             return;
 
@@ -1456,6 +1486,16 @@ orderForm.addEventListener(
             return;
 
         }
+
+
+        // =========================
+        // DISABLE SUBMIT BUTTON
+        // =========================
+
+        submitButton.disabled = true;
+
+        submitButton.textContent =
+            "PROCESSING...";
 
 
 
