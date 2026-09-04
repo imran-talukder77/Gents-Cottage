@@ -158,6 +158,9 @@ const products = [
         category: "pants",
         badge: "NEW"
     }
+
+    
+
 ];
 
 export { products };

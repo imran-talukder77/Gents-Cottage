@@ -88,6 +88,429 @@ if (currentProduct) {
 
 
 
+// ============================================================================
+// RELATED PRODUCTS
+// ============================================================================
+
+const relatedProductsContainer =
+    document.querySelector(
+        ".related-products-container"
+    );
+
+
+if (
+    currentProduct &&
+    relatedProductsContainer
+) {
+
+    const relatedProducts =
+        products
+            .filter(function (product) {
+
+                return (
+
+                    product.category ===
+                    currentProduct.category &&
+
+                    product.id !==
+                    currentProduct.id
+
+                );
+
+            })
+            .slice(0, 4);
+
+
+    relatedProducts.forEach(
+        function (product) {
+
+            const productCard =
+                document.createElement(
+                    "div"
+                );
+
+
+            // Same class as Home page
+
+            productCard.className =
+                "product-card";
+
+
+            productCard.dataset.category =
+                product.category;
+
+
+            productCard.innerHTML = `
+
+                <div class="product-image">
+
+                    <a href="product-details.html?id=${product.id}">
+
+                        <img
+                            src="${product.image}"
+                            alt="${product.name}"
+                        >
+
+                    </a>
+
+
+                    <span class="product-badge">
+
+                        ${product.badge}
+
+                    </span>
+
+                </div>
+
+
+                <div class="product-info">
+
+                    <h3>
+
+                        ${product.name}
+
+                    </h3>
+
+
+                    <div class="price">
+
+                        <span>
+
+                            ৳${product.price}
+
+                        </span>
+
+                        <del>
+
+                            ৳${product.oldPrice}
+
+                        </del>
+
+                    </div>
+
+
+                    <div class="product-sizes">
+
+                        <button
+                            class="size-btn"
+                            data-size="M"
+                        >
+                            M
+                        </button>
+
+
+                        <button
+                            class="size-btn"
+                            data-size="L"
+                        >
+                            L
+                        </button>
+
+
+                        <button
+                            class="size-btn"
+                            data-size="XL"
+                        >
+                            XL
+                        </button>
+
+
+                        <button
+                            class="size-btn"
+                            data-size="XXL"
+                        >
+                            XXL
+                        </button>
+
+                    </div>
+
+
+                    <p class="size-error">
+
+                        Please select a size first!
+
+                    </p>
+
+
+                    <button class="add-cart">
+
+                        <i class="fa-solid fa-cart-shopping"></i>
+
+                        ADD TO CART
+
+                    </button>
+
+                </div>
+
+            `;
+
+
+            relatedProductsContainer.appendChild(
+                productCard
+            );
+
+        }
+    );
+
+}
+
+
+
+// ============================================================================
+// RELATED PRODUCTS - SIZE & ADD TO CART
+// ============================================================================
+
+
+if (relatedProductsContainer) {
+
+    relatedProductsContainer.addEventListener(
+        "click",
+        function (event) {
+
+
+            // =========================
+            // SIZE SELECT
+            // =========================
+
+            const sizeButton =
+                event.target.closest(
+                    ".size-btn"
+                );
+
+
+            if (sizeButton) {
+
+                const productCard =
+                    sizeButton.closest(
+                        ".product-card"
+                    );
+
+
+                const allSizeButtons =
+                    productCard.querySelectorAll(
+                        ".size-btn"
+                    );
+
+
+                allSizeButtons.forEach(
+                    function (button) {
+
+                        button.classList.remove(
+                            "active"
+                        );
+
+                    }
+                );
+
+
+                sizeButton.classList.add(
+                    "active"
+                );
+
+
+                const sizeError =
+                    productCard.querySelector(
+                        ".size-error"
+                    );
+
+
+                if (sizeError) {
+
+                    sizeError.classList.remove(
+                        "show"
+                    );
+
+                }
+
+
+                return;
+
+            }
+
+
+            // =========================
+            // ADD TO CART
+            // =========================
+
+            const addCartButton =
+                event.target.closest(
+                    ".add-cart"
+                );
+
+
+            if (addCartButton) {
+
+                const productCard =
+                    addCartButton.closest(
+                        ".product-card"
+                    );
+
+
+                const selectedSizeButton =
+                    productCard.querySelector(
+                        ".size-btn.active"
+                    );
+
+
+                const sizeError =
+                    productCard.querySelector(
+                        ".size-error"
+                    );
+
+
+                // SIZE CHECK
+
+                if (!selectedSizeButton) {
+
+                    if (sizeError) {
+
+                        sizeError.classList.add(
+                            "show"
+                        );
+
+                    }
+
+                    return;
+
+                }
+
+
+                const selectedSize =
+                    selectedSizeButton.dataset.size;
+
+
+                // FIND PRODUCT ID
+
+                const productLink =
+                    productCard.querySelector(
+                        ".product-image a"
+                    );
+
+
+                const productUrl =
+                    new URL(
+                        productLink.href
+                    );
+
+
+                const relatedProductId =
+                    Number(
+                        productUrl.searchParams.get(
+                            "id"
+                        )
+                    );
+
+
+                // FIND PRODUCT DATA
+
+                const relatedProduct =
+                    products.find(
+                        function (product) {
+
+                            return (
+                                product.id ===
+                                relatedProductId
+                            );
+
+                        }
+                    );
+
+
+                if (!relatedProduct) {
+                    return;
+                }
+
+
+                // CHECK EXISTING PRODUCT
+
+                const existingProduct =
+                    cart.find(
+                        function (item) {
+
+                            return (
+
+                                item.name ===
+                                relatedProduct.name &&
+
+                                item.size ===
+                                selectedSize
+
+                            );
+
+                        }
+                    );
+
+
+                // ADD / UPDATE
+
+                if (existingProduct) {
+
+                    existingProduct.quantity++;
+
+                } else {
+
+                    cart.push({
+
+                        name:
+                            relatedProduct.name,
+
+                        image:
+                            relatedProduct.image,
+
+                        price:
+                            relatedProduct.price,
+
+                        size:
+                            selectedSize,
+
+                        quantity:
+                            1
+
+                    });
+
+                }
+
+
+                // UPDATE CART
+
+                updateCart();
+
+
+                // OPEN CART
+
+                openCart();
+
+
+                // BUTTON FEEDBACK
+
+
+                // BUTTON FEEDBACK
+
+                const originalText =
+                    addCartButton.innerHTML;
+
+
+                addCartButton.innerHTML =
+                    '<i class="fa-solid fa-check"></i> ADDED';
+
+
+                setTimeout(
+                    function () {
+
+                        addCartButton.innerHTML =
+                            originalText;
+
+                    },
+                    1000
+                );
+
+            }
+
+        }
+    );
+
+}
+
 
 
 // ============================================================================
