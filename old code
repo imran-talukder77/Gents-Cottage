@@ -1,0 +1,99 @@
+ <!-- =========================
+     CATEGORIES SECTION START
+========================= -->
+
+    <section class="categories">
+
+        <!-- Section Title -->
+        <div class="section-title">
+            <h2>Find Your Perfect Style</h2>
+        </div>
+
+
+        <!-- Category Container -->
+        <div class="category-container">
+
+
+            <!-- T-Shirts -->
+            <div class="category-card">
+
+                <div class="category-icon">
+                    <i class="fa-solid fa-shirt"></i>
+                </div>
+
+                <h3>T-Shirts</h3>
+
+                <p>Comfortable & Stylish</p>
+
+                <a href="#products" class="category-shop" data-category="tshirt">
+                    SHOP NOW
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+
+            </div>
+
+
+            <!-- Shirts -->
+            <div class="category-card">
+
+                <div class="category-icon">
+                    <i class="fa-solid fa-user-tie"></i>
+                </div>
+
+                <h3>Shirts</h3>
+
+                <p>Premium & Elegant</p>
+
+                <a href="#products" class="category-shop" data-category="shirt">
+                    SHOP NOW
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+
+            </div>
+
+
+            <!-- Polo Shirts -->
+            <div class="category-card">
+
+                <div class="category-icon">
+                    <i class="fa-solid fa-shirt"></i>
+                </div>
+
+                <h3>Polo Shirts</h3>
+
+                <p>Modern Everyday Style</p>
+
+                <a href="#products" class="category-shop" data-category="polo">
+                    SHOP NOW
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+
+            </div>
+
+
+            <!-- Pants -->
+            <div class="category-card">
+
+                <div class="category-icon">
+                    <i class="fa-solid fa-person"></i>
+                </div>
+
+                <h3>Pants</h3>
+
+                <p>Comfort & Modern Fit</p>
+
+                <a href="#products" class="category-shop" data-category="pants">
+                    SHOP NOW
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+    <!-- =========================
+     CATEGORIES SECTION END
+========================= -->
